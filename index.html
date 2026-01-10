@@ -1,1 +1,93 @@
 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Material Reconciliation – Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;background:#f4f6f8;padding:15px}
+.box{background:#fff;padding:15px;border-radius:8px}
+input,select,button{width:100%;padding:10px;margin:6px 0}
+button{background:#007bff;color:#fff;border:none;border-radius:6px}
+.item{font-size:14px;margin:5px 0}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h3>Issue Book – Material Reconciliation</h3>
+
+<select id="block">
+  <option>Block-15</option>
+  <option>Block-16</option>
+  <option>Block-17</option>
+</select>
+
+<input id="issueNo" placeholder="Issue Book Serial No">
+<input id="date" type="date">
+
+<hr>
+
+<select id="category">
+  <option>Material</option>
+  <option>Fastener</option>
+</select>
+
+<select id="item"></select>
+<input id="qty" type="number" placeholder="Quantity">
+
+<button onclick="addItem()">+ Add Item</button>
+
+<div id="list"></div>
+
+<button onclick="save()">Save Issue</button>
+</div>
+
+<script>
+const material=["Rafter","Purlin-1","Purlin-2","Front Bracing"];
+const fastener=["M10 Bolt & Nut","M12 Bolt & Nut","M8 Bolt & Nut"];
+let items=[];
+
+function load(){
+  item.innerHTML="";
+  (category.value==="Material"?material:fastener)
+  .forEach(i=>item.innerHTML+=`<option>${i}</option>`);
+}
+category.onchange=load;
+load();
+
+function addItem(){
+  if(!qty.value) return alert("Enter qty");
+  items.push({cat:category.value,name:item.value,qty:+qty.value});
+  render();
+  qty.value="";
+}
+
+function render(){
+  list.innerHTML="";
+  items.forEach((i,idx)=>{
+    list.innerHTML+=`<div class="item">${i.cat} – ${i.name} : ${i.qty}</div>`;
+  });
+}
+
+function save(){
+  if(!issueNo.value || items.length===0) return alert("Missing data");
+  const data=JSON.parse(localStorage.getItem("issues")||"[]");
+  data.push({
+    block:block.value,
+    issueNo:issueNo.value,
+    date:date.value,
+    items
+  });
+  localStorage.setItem("issues",JSON.stringify(data));
+  alert("Saved ✔");
+  items=[];
+  render();
+  issueNo.value="";
+}
+</script>
+
+</body>
+</html>
