@@ -1,273 +1,228 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Material Issue Tracking</title>
+<title>Solar Material Calculator</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f4f6f8;
-}
+body{margin:0;font-family:Arial;background:#f4f6f8}
+.hidden{display:none}
+
+/* LOGIN */
+#login{height:100vh;display:flex;align-items:center;justify-content:center}
+.login-box{background:#fff;padding:25px;border-radius:10px;width:280px;text-align:center}
+.login-box input,.login-box button{width:100%;padding:10px;margin-top:10px}
 
 /* HEADER */
-.header{
-  background:#111;
-  color:#fff;
-  padding:14px;
-  text-align:center;
+.header{display:flex;align-items:center;background:#111;color:#fff;padding:10px}
+.header h1{font-size:16px;margin:0;flex:1}
+.info-icon{background:#fff;color:#000;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;cursor:pointer}
+
+/* INFO POPUP */
+.info-popup{
+  position:fixed;top:60px;right:10px;background:#fff;
+  padding:14px;border-radius:8px;width:260px;
+  box-shadow:0 5px 15px rgba(0,0,0,.3);
+  display:none;font-size:13px;z-index:999;
 }
-.header h2{margin:0;font-size:18px}
-.header small{opacity:.8}
 
 /* LAYOUT */
-.container{padding:15px}
-.box{
-  background:#fff;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,.08);
-}
+.container{display:flex}
+.sidebar{width:150px;background:#222}
+.sidebar button{width:100%;padding:14px;border:none;background:#222;color:#fff;text-align:left}
+.sidebar button.active{background:#007bff}
+.content{flex:1;padding:15px}
+.box{background:#fff;padding:15px;border-radius:8px}
 
-h3{margin-top:0;font-size:16px}
+/* BUTTON LEVELS */
+.level1 button{background:#ddd;border:none;padding:8px 12px;border-radius:6px}
+.level1 button.active{background:#007bff;color:#fff}
+.level2 button{background:#e3f2fd;border:none;padding:8px 10px;border-radius:6px}
+.level2 button.active{background:#28a745;color:#fff}
 
-/* FORM */
-label{font-size:13px;font-weight:bold}
-input,select{
-  width:100%;
-  padding:10px;
-  margin:6px 0 12px 0;
-  border-radius:6px;
-  border:1px solid #ccc;
-  font-size:14px;
-}
+.calc-btn{background:#ff9800;color:#fff;border:none;padding:10px;width:100%;margin-top:10px;border-radius:6px}
+input,select{width:100%;padding:10px;margin:8px 0}
 
-.radio-group{
-  display:flex;
-  gap:15px;
-  margin-bottom:12px;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:#007bff;
-  color:#fff;
-  font-size:15px;
-  font-weight:bold;
-  cursor:pointer;
-}
-button:active{transform:scale(0.97)}
-
-/* TABLE */
-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:13px;
-}
-th,td{
-  padding:8px;
-  border-bottom:1px solid #ddd;
-  text-align:left;
-}
-th{background:#f1f1f1}
-
-.delete-btn{
-  background:#e53935;
-  color:#fff;
-  border:none;
-  padding:6px 10px;
-  border-radius:6px;
-  font-size:12px;
-}
-
-/* SUMMARY */
-.summary-item{
-  display:flex;
-  justify-content:space-between;
-  padding:6px 0;
-  border-bottom:1px dashed #ccc;
-}
-
-.footer{
-  text-align:center;
-  font-size:12px;
-  color:#666;
-  padding:10px;
+@media(max-width:768px){
+.container{flex-direction:column}
+.sidebar{width:100%;display:flex}
+.sidebar button{flex:1;text-align:center}
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-box">
+    <h3>Enter Password</h3>
+    <input type="password" id="pwd">
+    <button onclick="login()">Login</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+
 <div class="header">
-  <h2>Material Issue Tracking</h2>
-  <small>Internal Utility Tool – Site Use Only</small>
+  <h1>Solar Site Engineer Tool</h1>
+  <div class="info-icon" onclick="toggleInfo()">i</div>
+</div>
+
+<div class="info-popup" id="info">
+<b>Internal Utility Tool</b><br><br>
+For easy site engineering calculations.<br><br>
+Developed by <b>Sharath Chandra</b><br>
+Version: v1.2<br>
+Last Updated: 07-Jan-2026
 </div>
 
 <div class="container">
 
-<!-- ADD ENTRY -->
-<div class="box">
-  <h3>➕ Add Issue Entry</h3>
+<div class="sidebar">
+  <button class="active" onclick="show('mms',this)">MMS</button>
+  <button onclick="show('piling',this)">Piling</button>
+  <button onclick="show('module',this)">Module</button>
+</div>
 
-  <label>Date</label>
-  <input type="date" id="date">
+<div class="content">
 
-  <label>Issue Book No</label>
-  <input type="text" id="issueNo" placeholder="Issue Book Serial No">
-
-  <label>Block No</label>
-  <input type="text" id="block" placeholder="Block No">
-
-  <label>Issued To</label>
-  <input type="text" id="issuedTo" placeholder="Supervisor / Engineer">
-
-  <label>Category</label>
-  <div class="radio-group">
-    <label><input type="radio" name="category" value="Material" checked> Material</label>
-    <label><input type="radio" name="category" value="Fastener"> Fastener</label>
+<!-- MMS -->
+<div id="mms" class="box">
+  <div class="level1">
+    <button class="active" onclick="setType('full',this)">Full Table</button>
+    <button onclick="setType('half',this)">Half Table</button>
   </div>
 
-  <label>Item Name</label>
-  <input type="text" id="item" placeholder="Material / Fastener name">
+  <div class="level2">
+    <button class="active" onclick="mode('t2m',this)">Table → Material</button>
+    <button onclick="mode('m2t',this)">Material → Table</button>
+    <button onclick="mode('t2f',this)">Table → Fasteners</button>
+    <button onclick="mode('f2t',this)">Fasteners → Table</button>
+  </div>
 
-  <label>Quantity</label>
-  <input type="number" id="qty" placeholder="Quantity">
+  <!-- TABLE TO MATERIAL -->
+  <div id="t2m">
+    <input id="tables1" type="number" placeholder="No. of Tables">
+    <button class="calc-btn" onclick="calcMaterial()">Calculate</button>
+    <div id="out1"></div>
+  </div>
 
-  <label>Unit</label>
-  <select id="unit">
-    <option>Nos</option>
-    <option>Kg</option>
-    <option>Meters</option>
-  </select>
+  <!-- MATERIAL TO TABLE -->
+  <div id="m2t" class="hidden">
+    <label>
+      <input type="radio" id="matRadio" name="mf" checked onchange="updateDropdown()"> Material
+    </label>
+    <label>
+      <input type="radio" id="fasRadio" name="mf" onchange="updateDropdown()"> Fastener
+    </label>
 
-  <button onclick="saveEntry()">Save Entry</button>
+    <select id="tableType" onchange="updateDropdown()">
+      <option value="full">Full Table</option>
+      <option value="half">Half Table</option>
+    </select>
+
+    <select id="itemDropdown"></select>
+
+    <input id="matQty" type="number" placeholder="Quantity">
+    <button class="calc-btn" onclick="materialToTable()">Calculate</button>
+    <div id="out2"></div>
+  </div>
+
+  <!-- TABLE TO FASTENERS -->
+  <div id="t2f" class="hidden">
+    <input id="tables2" type="number" placeholder="No. of Tables">
+    <button class="calc-btn" onclick="calcFasteners()">Calculate</button>
+    <div id="out3"></div>
+  </div>
+
+  <!-- FASTENER TO TABLE -->
+  <div id="f2t" class="hidden">
+    <select id="fasSel"></select>
+    <input id="fasQty" type="number" placeholder="Fastener Quantity">
+    <button class="calc-btn" onclick="fastenerToTable()">Calculate</button>
+    <div id="out4"></div>
+  </div>
 </div>
 
-<!-- LIST -->
-<div class="box">
-  <h3>📋 Issued Items</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Issue</th>
-        <th>Block</th>
-        <th>Item</th>
-        <th>Qty</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="list"></tbody>
-  </table>
+<div id="piling" class="box hidden">
+  <input id="pileTables" type="number" placeholder="No. of Tables">
+  <button class="calc-btn" onclick="calcPile()">Calculate</button>
+  <div id="pileOut"></div>
 </div>
 
-<!-- SUMMARY -->
-<div class="box">
-  <h3>📊 Reconciliation Summary</h3>
-  <div id="summary"></div>
+<div id="module" class="box hidden">
+Module → Pallet planning section
 </div>
 
 </div>
+</div>
 
-<div class="footer">
-Material reconciliation • Developed by Sharath Chandra
 </div>
 
 <script>
-/* INIT */
-const data = JSON.parse(localStorage.getItem("issues") || "[]");
-document.getElementById("date").valueAsDate = new Date();
+/* LOGIN */
+function login(){
+  if(document.getElementById("pwd").value==="solar@123"){
+    document.getElementById("login").style.display="none";
+    document.getElementById("app").classList.remove("hidden");
+  }else alert("Wrong password");
+}
 
-render();
-
-/* SAVE */
-function saveEntry(){
-  const entry = {
-    date: date.value,
-    issueNo: issueNo.value,
-    block: block.value,
-    issuedTo: issuedTo.value,
-    category: document.querySelector("input[name='category']:checked").value,
-    item: item.value,
-    qty: Number(qty.value),
-    unit: unit.value
-  };
-
-  if(!entry.issueNo || !entry.block || !entry.item || !entry.qty){
-    alert("Fill all required fields");
-    return;
+/* INFO */
+function toggleInfo(){
+  info.style.display = info.style.display==="block"?"none":"block";
+}
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".info-icon") && !e.target.closest(".info-popup")){
+    info.style.display="none";
   }
+});
 
-  data.push(entry);
-  localStorage.setItem("issues", JSON.stringify(data));
-  clearForm();
-  render();
+/* NAV */
+function show(id,btn){
+  document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
 }
 
-/* CLEAR */
-function clearForm(){
-  issueNo.value="";
-  block.value="";
-  issuedTo.value="";
-  item.value="";
-  qty.value="";
-}
+/* DATA */
+const material={
+  full:{Rafter:12,"Purlin 1":4,"Purlin 2":4,"Purlin 3":4,"Purlin 4":4,"Purlin 5":4,"Purlin 6":4,"Front Bracing":12,"Rear Bracing":12,"Connecting Channel":12,"Cross Bracing":2},
+  half:{Rafter:7,"Purlin 7":4,"Purlin 8":4,"Purlin 9":4,"Front Bracing":7,"Rear Bracing":7,"Connecting Channel":7,"Cross Bracing":2}
+};
 
-/* DELETE */
-function remove(index){
-  if(confirm("Delete this entry?")){
-    data.splice(index,1);
-    localStorage.setItem("issues", JSON.stringify(data));
-    render();
+const fastener={
+  full:{
+    "M12×30 Nut–Bolt":24,"M12×30 PW":48,"M12×30 SW":24,
+    "M10×30 Nut–Bolt":324,"M10×30 PW":472,"M10×30 SW":324,"M10×30 RW":176,
+    "M8×25 Nut-Bolt":232,"M8×25 RW":232
+  },
+  half:{
+    "M12×30 Nut–Bolt":14,"M12×30 PW":28,"M12×30 SW":14,
+    "M10×30 Nut–Bolt":176,"M10×30 PW":264,"M10×30 SW":176,"M10×30 RW":88,
+    "M8×25 Nut-Bolt":116,"M8×25 RW":116
   }
-}
+};
 
-/* RENDER */
-function render(){
-  const list=document.getElementById("list");
-  list.innerHTML="";
-
-  data.forEach((e,i)=>{
-    list.innerHTML+=`
-      <tr>
-        <td>${e.date}</td>
-        <td>${e.issueNo}</td>
-        <td>${e.block}</td>
-        <td>${e.item}</td>
-        <td>${e.qty} ${e.unit}</td>
-        <td><button class="delete-btn" onclick="remove(${i})">X</button></td>
-      </tr>`;
-  });
-
-  renderSummary();
-}
-
-/* SUMMARY */
-function renderSummary(){
-  const sum={};
-  data.forEach(e=>{
-    if(!sum[e.item]) sum[e.item]=0;
-    sum[e.item]+=e.qty;
-  });
-
-  const s=document.getElementById("summary");
-  s.innerHTML="";
-  for(let k in sum){
-    s.innerHTML+=`
-      <div class="summary-item">
-        <span>${k}</span>
-        <b>${sum[k]}</b>
-      </div>`;
+/* ✅ DROPDOWN FIX ONLY */
+function updateDropdown(){
+  const isMaterial=document.getElementById("matRadio").checked;
+  const tableType=document.getElementById("tableType").value;
+  const dd=document.getElementById("itemDropdown");
+  dd.innerHTML="";
+  const src=isMaterial?material[tableType]:fastener[tableType];
+  for(const k in src){
+    const o=document.createElement("option");
+    o.value=k;o.textContent=k;
+    dd.appendChild(o);
   }
 }
+window.onload=updateDropdown;
 </script>
 
 </body>
