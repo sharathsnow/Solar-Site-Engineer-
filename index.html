@@ -1,91 +1,272 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Material Reconciliation – Test</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Material Issue Tracking</title>
+
 <style>
-body{font-family:Arial;background:#f4f6f8;padding:15px}
-.box{background:#fff;padding:15px;border-radius:8px}
-input,select,button{width:100%;padding:10px;margin:6px 0}
-button{background:#007bff;color:#fff;border:none;border-radius:6px}
-.item{font-size:14px;margin:5px 0}
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f4f6f8;
+}
+
+/* HEADER */
+.header{
+  background:#111;
+  color:#fff;
+  padding:14px;
+  text-align:center;
+}
+.header h2{margin:0;font-size:18px}
+.header small{opacity:.8}
+
+/* LAYOUT */
+.container{padding:15px}
+.box{
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+h3{margin-top:0;font-size:16px}
+
+/* FORM */
+label{font-size:13px;font-weight:bold}
+input,select{
+  width:100%;
+  padding:10px;
+  margin:6px 0 12px 0;
+  border-radius:6px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+
+.radio-group{
+  display:flex;
+  gap:15px;
+  margin-bottom:12px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#007bff;
+  color:#fff;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+button:active{transform:scale(0.97)}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+th,td{
+  padding:8px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
+}
+th{background:#f1f1f1}
+
+.delete-btn{
+  background:#e53935;
+  color:#fff;
+  border:none;
+  padding:6px 10px;
+  border-radius:6px;
+  font-size:12px;
+}
+
+/* SUMMARY */
+.summary-item{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 0;
+  border-bottom:1px dashed #ccc;
+}
+
+.footer{
+  text-align:center;
+  font-size:12px;
+  color:#666;
+  padding:10px;
+}
 </style>
 </head>
 
 <body>
 
+<div class="header">
+  <h2>Material Issue Tracking</h2>
+  <small>Internal Utility Tool – Site Use Only</small>
+</div>
+
+<div class="container">
+
+<!-- ADD ENTRY -->
 <div class="box">
-<h3>Issue Book – Material Reconciliation</h3>
+  <h3>➕ Add Issue Entry</h3>
 
-<select id="block">
-  <option>Block-15</option>
-  <option>Block-16</option>
-  <option>Block-17</option>
-</select>
+  <label>Date</label>
+  <input type="date" id="date">
 
-<input id="issueNo" placeholder="Issue Book Serial No">
-<input id="date" type="date">
+  <label>Issue Book No</label>
+  <input type="text" id="issueNo" placeholder="Issue Book Serial No">
 
-<hr>
+  <label>Block No</label>
+  <input type="text" id="block" placeholder="Block No">
 
-<select id="category">
-  <option>Material</option>
-  <option>Fastener</option>
-</select>
+  <label>Issued To</label>
+  <input type="text" id="issuedTo" placeholder="Supervisor / Engineer">
 
-<select id="item"></select>
-<input id="qty" type="number" placeholder="Quantity">
+  <label>Category</label>
+  <div class="radio-group">
+    <label><input type="radio" name="category" value="Material" checked> Material</label>
+    <label><input type="radio" name="category" value="Fastener"> Fastener</label>
+  </div>
 
-<button onclick="addItem()">+ Add Item</button>
+  <label>Item Name</label>
+  <input type="text" id="item" placeholder="Material / Fastener name">
 
-<div id="list"></div>
+  <label>Quantity</label>
+  <input type="number" id="qty" placeholder="Quantity">
 
-<button onclick="save()">Save Issue</button>
+  <label>Unit</label>
+  <select id="unit">
+    <option>Nos</option>
+    <option>Kg</option>
+    <option>Meters</option>
+  </select>
+
+  <button onclick="saveEntry()">Save Entry</button>
+</div>
+
+<!-- LIST -->
+<div class="box">
+  <h3>📋 Issued Items</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Issue</th>
+        <th>Block</th>
+        <th>Item</th>
+        <th>Qty</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="list"></tbody>
+  </table>
+</div>
+
+<!-- SUMMARY -->
+<div class="box">
+  <h3>📊 Reconciliation Summary</h3>
+  <div id="summary"></div>
+</div>
+
+</div>
+
+<div class="footer">
+Material reconciliation • Developed by Sharath Chandra
 </div>
 
 <script>
-const material=["Rafter","Purlin-1","Purlin-2","Front Bracing"];
-const fastener=["M10 Bolt & Nut","M12 Bolt & Nut","M8 Bolt & Nut"];
-let items=[];
+/* INIT */
+const data = JSON.parse(localStorage.getItem("issues") || "[]");
+document.getElementById("date").valueAsDate = new Date();
 
-function load(){
-  item.innerHTML="";
-  (category.value==="Material"?material:fastener)
-  .forEach(i=>item.innerHTML+=`<option>${i}</option>`);
-}
-category.onchange=load;
-load();
+render();
 
-function addItem(){
-  if(!qty.value) return alert("Enter qty");
-  items.push({cat:category.value,name:item.value,qty:+qty.value});
+/* SAVE */
+function saveEntry(){
+  const entry = {
+    date: date.value,
+    issueNo: issueNo.value,
+    block: block.value,
+    issuedTo: issuedTo.value,
+    category: document.querySelector("input[name='category']:checked").value,
+    item: item.value,
+    qty: Number(qty.value),
+    unit: unit.value
+  };
+
+  if(!entry.issueNo || !entry.block || !entry.item || !entry.qty){
+    alert("Fill all required fields");
+    return;
+  }
+
+  data.push(entry);
+  localStorage.setItem("issues", JSON.stringify(data));
+  clearForm();
   render();
+}
+
+/* CLEAR */
+function clearForm(){
+  issueNo.value="";
+  block.value="";
+  issuedTo.value="";
+  item.value="";
   qty.value="";
 }
 
-function render(){
-  list.innerHTML="";
-  items.forEach((i,idx)=>{
-    list.innerHTML+=`<div class="item">${i.cat} – ${i.name} : ${i.qty}</div>`;
-  });
+/* DELETE */
+function remove(index){
+  if(confirm("Delete this entry?")){
+    data.splice(index,1);
+    localStorage.setItem("issues", JSON.stringify(data));
+    render();
+  }
 }
 
-function save(){
-  if(!issueNo.value || items.length===0) return alert("Missing data");
-  const data=JSON.parse(localStorage.getItem("issues")||"[]");
-  data.push({
-    block:block.value,
-    issueNo:issueNo.value,
-    date:date.value,
-    items
+/* RENDER */
+function render(){
+  const list=document.getElementById("list");
+  list.innerHTML="";
+
+  data.forEach((e,i)=>{
+    list.innerHTML+=`
+      <tr>
+        <td>${e.date}</td>
+        <td>${e.issueNo}</td>
+        <td>${e.block}</td>
+        <td>${e.item}</td>
+        <td>${e.qty} ${e.unit}</td>
+        <td><button class="delete-btn" onclick="remove(${i})">X</button></td>
+      </tr>`;
   });
-  localStorage.setItem("issues",JSON.stringify(data));
-  alert("Saved ✔");
-  items=[];
-  render();
-  issueNo.value="";
+
+  renderSummary();
+}
+
+/* SUMMARY */
+function renderSummary(){
+  const sum={};
+  data.forEach(e=>{
+    if(!sum[e.item]) sum[e.item]=0;
+    sum[e.item]+=e.qty;
+  });
+
+  const s=document.getElementById("summary");
+  s.innerHTML="";
+  for(let k in sum){
+    s.innerHTML+=`
+      <div class="summary-item">
+        <span>${k}</span>
+        <b>${sum[k]}</b>
+      </div>`;
+  }
 }
 </script>
 
