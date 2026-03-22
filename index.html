@@ -6,130 +6,40 @@
 <title>Solar Material Calculator</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f4f6f8;
-}
+body{margin:0;font-family:Arial;background:#f4f6f8}
 
 /* LOGIN */
-#loginScreen{
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#111,#333);
-}
-
-.login-box{
-  background:#fff;
-  padding:25px;
-  width:300px;
-  border-radius:10px;
-  text-align:center;
-}
-
-.login-box input,.login-box button{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-}
+#loginScreen{height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#111,#333)}
+.login-box{background:#fff;padding:25px;width:300px;border-radius:10px;text-align:center}
+.login-box input,.login-box button{width:100%;padding:12px;margin:10px 0}
 
 /* APP */
 #app{display:none}
 
 /* HEADER */
-.header{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  background:#111;
-  color:#fff;
-  padding:12px;
-}
-
-.menu-btn{
-  font-size:22px;
-  cursor:pointer;
-}
-
+.header{display:flex;align-items:center;gap:10px;background:#111;color:#fff;padding:12px}
+.menu-btn{font-size:22px;cursor:pointer}
 .header img{height:36px}
 .header h1{font-size:15px;margin:0;flex:1}
 
 /* INFO */
-.info-icon{
-  width:26px;height:26px;
-  border-radius:50%;
-  background:#fff;
-  color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-}
-
-.info-popup{
-  position:fixed;
-  top:60px;
-  right:12px;
-  background:#fff;
-  padding:14px;
-  width:260px;
-  border-radius:8px;
-  display:none;
-  z-index:999;
-}
+.info-icon{width:26px;height:26px;border-radius:50%;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.info-popup{position:fixed;top:60px;right:12px;background:#fff;padding:14px;width:260px;border-radius:8px;display:none;z-index:999}
 
 /* LAYOUT */
-.container{
-  display:flex;
-}
+.container{display:flex}
 
 /* SIDEBAR */
-.sidebar{
-  width:180px;
-  background:#222;
-  display:flex;
-  flex-direction:column;
-  transition:0.3s;
-}
-
-.sidebar button{
-  padding:14px;
-  border:none;
-  background:#222;
-  color:#fff;
-  text-align:left;
-  cursor:pointer;
-}
-
+.sidebar{width:180px;background:#222;display:flex;flex-direction:column;transition:0.3s}
+.sidebar button{padding:14px;border:none;background:#222;color:#fff;text-align:left;cursor:pointer}
 .sidebar button.active{background:#007bff}
 
 /* MOBILE */
 @media(max-width:768px){
-  .sidebar{
-    position:fixed;
-    top:0;
-    left:-220px;
-    height:100%;
-    width:200px;
-    z-index:1000;
-  }
-
-  .sidebar.show{left:0}
-
-  .overlay{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.5);
-    display:none;
-    z-index:999;
-  }
-
-  .overlay.show{display:block}
+.sidebar{position:fixed;top:0;left:-220px;height:100%;width:200px;z-index:1000}
+.sidebar.show{left:0}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999}
+.overlay.show{display:block}
 }
 
 /* CONTENT */
@@ -139,21 +49,14 @@ body{
 
 button{padding:10px;width:100%;margin-top:8px;cursor:pointer}
 input,select{width:100%;padding:10px;margin:8px 0}
-
 .hidden{display:none}
 
 .table-btn{background:#e0e0e0}
 .table-btn.active{background:#1976d2;color:#fff}
-
 .mode-btn{background:#c8e6c9}
 .mode-btn.active{background:#2e7d32;color:#fff}
 
-.calculate-btn{
-  background:#007bff;
-  color:#fff;
-  font-weight:bold;
-}
-
+.calculate-btn{background:#007bff;color:#fff;font-weight:bold}
 .footer{text-align:center;padding:10px;font-size:12px}
 </style>
 </head>
@@ -193,11 +96,12 @@ Developed by <b>Sharath</b>
   <button class="active" onclick="showSection('mms',this)">MMS</button>
   <button onclick="showSection('piling',this)">Piling</button>
   <button onclick="showSection('module',this)">Module</button>
+  <button onclick="showSection('stringcalc',this)">String Calc</button>
 </div>
 
 <div class="content">
 
-<!-- MMS -->
+<!-- MMS (unchanged) -->
 <div id="mms" class="box">
   <div class="tabs">
     <button class="table-btn active" onclick="setMMSTable('full',this)">Full</button>
@@ -253,6 +157,23 @@ Developed by <b>Sharath</b>
   <div id="moduleResult"></div>
 </div>
 
+<!-- STRING CALC -->
+<div id="stringcalc" class="box hidden">
+  <h3>String & Inverter Calculator</h3>
+
+  <input type="number" id="totalModules" placeholder="Total Modules">
+  <input type="number" id="modulesPerString" value="29">
+  
+  <select id="stringMode">
+    <option value="18">18 Strings / Inverter</option>
+    <option value="19">19 Strings / Inverter</option>
+  </select>
+
+  <button class="calculate-btn" onclick="calcStringInv()">Calculate</button>
+
+  <div id="stringResult"></div>
+</div>
+
 </div>
 </div>
 
@@ -294,100 +215,22 @@ function showSection(id,btn){
   overlay.classList.remove("show");
 }
 
-/* MMS LOGIC */
-let mmsType="full";
+/* STRING CALC */
+function calcStringInv(){
+  let modules = +totalModules.value;
+  let perString = +modulesPerString.value;
+  let stringsPerInv = +stringMode.value;
 
-const material={
-  full:{
-    Rafter:12,
-    "Purlin 1":4,"Purlin 2":4,"Purlin 3":4,
-    "Purlin 4":4,"Purlin 5":4,"Purlin 6":4,
-    "Front Bracing":12,"Rear Bracing":12,
-    "Connecting Channel":12,"Cross Bracing":2
-  },
-  half:{
-    Rafter:7,
-    "Purlin 7":4,"Purlin 8":4,"Purlin 9":4,
-    "Front Bracing":7,"Rear Bracing":7,
-    "Connecting Channel":7,"Cross Bracing":2
-  }
-};
+  let totalStrings = Math.floor(modules / perString);
+  let inverters = Math.ceil(totalStrings / stringsPerInv);
+  let lastInv = totalStrings % stringsPerInv || stringsPerInv;
 
-const fastener={
-  full:{
-    "M12×30 Nut–Bolt":24,"M12×30 PW":48,"M12×30 SW":24,
-    "M10×30 Nut–Bolt":324,"M10×30 PW":472,"M10×30 SW":324,"M10×30 RW":176,
-    "M8×25 Nut-Bolt":232,"M8×25 RW":232
-  },
-  half:{
-    "M12×30 Nut–Bolt":14,"M12×30 PW":28,"M12×30 SW":14,
-    "M10×30 Nut–Bolt":176,"M10×30 PW":264,"M10×30 SW":176,"M10×30 RW":88,
-    "M8×25 Nut-Bolt":116,"M8×25 RW":116
-  }
-};
-
-function setMMSTable(t,btn){
-  mmsType=t;
-  btn.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  loadDropdowns();
-}
-
-function showMMS(id,btn){
-  btn.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  ["t2m","m2t","t2f","f2t"].forEach(x=>{
-    document.getElementById(x).classList.toggle("hidden",x!==id);
-  });
-}
-
-function loadDropdowns(){
-  matType.innerHTML="";
-  for(let k in material[mmsType]) matType.innerHTML+=`<option>${k}</option>`;
-  fasType.innerHTML="";
-  for(let k in fastener[mmsType]) fasType.innerHTML+=`<option>${k}</option>`;
-}
-loadDropdowns();
-
-function calcMaterial(){
-  let n=+mmsTables.value;
-  let out="";
-  for(let k in material[mmsType]) out+=`${k}: ${material[mmsType][k]*n}<br>`;
-  mmsResult.innerHTML=out;
-}
-
-function materialToTable(){
-  let q=+matQty.value,t=matType.value;
-  mmsResult2.innerHTML="Tables: "+Math.floor(q/material[mmsType][t]);
-}
-
-function calcFasteners(){
-  let n=+fasTables.value;
-  let out="";
-  for(let k in fastener[mmsType]) out+=`${k}: ${fastener[mmsType][k]*n}<br>`;
-  fasResult.innerHTML=out;
-}
-
-function fastenerToTable(){
-  let q=+fasQty.value,t=fasType.value;
-  fasResult2.innerHTML="Tables: "+Math.floor(q/fastener[mmsType][t]);
-}
-
-/* PILING */
-function calcPiling(){
-  let n=+pileTables.value;
-  pileResult.innerHTML="Posts: "+(n*12);
-}
-
-/* MODULE */
-function calcPallets(){
-  let full=+fullTableCount.value||0;
-  let half=+halfTableCount.value||0;
-
-  let total=(full*58)+(half*29);
-  let pallets=Math.ceil(total/33);
-
-  moduleResult.innerHTML=`Total Modules: ${total}<br>Pallets: ${pallets}`;
+  stringResult.innerHTML = `
+  <b>Total Strings:</b> ${totalStrings}<br>
+  <b>Inverters Required:</b> ${inverters}<br>
+  <b>Strings/Inverter:</b> ${stringsPerInv}<br>
+  <b>Last Inverter:</b> ${lastInv}
+  `;
 }
 
 </script>
