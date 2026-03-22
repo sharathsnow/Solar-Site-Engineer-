@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Solar Calculator</title>
+<title>Solar Site Engineer Tool</title>
 
 <style>
 body {
@@ -10,35 +10,47 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* Sidebar */
-.sidebar {
-  width: 230px;
-  height: 100vh;
-  background: #1e293b;
+/* Top bar */
+.topbar {
+  background: #2c3e50;
   color: white;
-  position: fixed;
-  padding-top: 20px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
 }
 
-.sidebar h2 {
-  text-align: center;
+.menu-btn {
+  font-size: 20px;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px;
+  width: 220px;
+  height: 100%;
+  background: #34495e;
+  padding-top: 50px;
+  transition: 0.3s;
 }
 
 .sidebar a {
   display: block;
-  padding: 12px;
   color: white;
-  cursor: pointer;
+  padding: 12px;
+  text-decoration: none;
 }
 
 .sidebar a:hover {
-  background: #334155;
+  background: #2c3e50;
 }
 
 /* Content */
 .content {
-  margin-left: 230px;
-  padding: 20px;
+  padding: 15px;
 }
 
 /* Sections */
@@ -50,152 +62,96 @@ body {
   display: block;
 }
 
-/* Input styling */
-input {
-  padding: 8px;
-  margin: 5px;
-  width: 150px;
-}
-
+/* Buttons */
 button {
-  padding: 8px 12px;
-  margin: 5px;
-  cursor: pointer;
-}
-
-/* Mobile Button */
-.menu-btn {
-  display: none;
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  background: #1e293b;
-  color: white;
-  border: none;
   padding: 10px;
-  font-size: 18px;
+  margin-top: 10px;
+  width: 100%;
 }
 
-/* Mobile View */
-@media (max-width: 768px) {
-  .sidebar {
-    display: none;
-  }
-  .content {
-    margin-left: 0;
-  }
-  .menu-btn {
-    display: block;
-  }
+/* Input */
+input {
+  padding: 10px;
+  width: 100%;
+  margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- Mobile Menu Button -->
-<button class="menu-btn" onclick="toggleMenu()">☰</button>
+<!-- Top bar -->
+<div class="topbar">
+  <span class="menu-btn" onclick="toggleMenu()">☰</span>
+  <h3>Solar Tool</h3>
+</div>
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
-  <h2>Solar Tool</h2>
+  <a onclick="showSection('home')">Home</a>
+  <a onclick="showSection('mw')">MW Calculator</a>
   <a onclick="showSection('tables')">Tables</a>
   <a onclick="showSection('strings')">Strings</a>
-  <a onclick="showSection('mw')">MW Calc</a>
-  <a onclick="showSection('inverter')">Inverter</a>
 </div>
 
 <!-- Content -->
 <div class="content">
 
-<!-- Tables -->
-<div id="tables" class="section active">
-  <h2>Tables Calculator</h2>
+  <div id="home" class="section active">
+    <h2>Welcome</h2>
+    <p>Solar Site Engineer Tool</p>
+  </div>
 
-  <input type="number" id="tablesInput" placeholder="No. of Tables">
-  <button onclick="calcModules()">Calculate Modules</button>
+  <div id="mw" class="section">
+    <h2>MW Calculator</h2>
+    <input type="number" id="modules" placeholder="No. of Modules">
+    <input type="number" id="watt" placeholder="Module Watt (Wp)">
+    <button onclick="calcMW()">Calculate</button>
+    <p id="mwResult"></p>
+  </div>
 
-  <p id="modulesResult"></p>
-</div>
+  <div id="tables" class="section">
+    <h2>Tables</h2>
+    <p>1 Table = 58 Modules</p>
+  </div>
 
-<!-- Strings -->
-<div id="strings" class="section">
-  <h2>String Calculator</h2>
-
-  <input type="number" id="stringsInput" placeholder="No. of Strings">
-  <button onclick="calcTables()">Calculate Tables</button>
-
-  <p id="tablesResult"></p>
-</div>
-
-<!-- MW -->
-<div id="mw" class="section">
-  <h2>MW Calculator</h2>
-
-  <input type="number" id="mwTables" placeholder="No. of Tables">
-  <button onclick="calcMW()">Calculate MW</button>
-
-  <p id="mwResult"></p>
-</div>
-
-<!-- Inverter -->
-<div id="inverter" class="section">
-  <h2>Inverter Calculator</h2>
-
-  <input type="number" id="invCount" placeholder="No. of Inverters">
-  <button onclick="calcCapacity()">Calculate Capacity</button>
-
-  <p id="invResult"></p>
-</div>
+  <div id="strings" class="section">
+    <h2>Strings</h2>
+    <p>1 String = 29 Modules</p>
+  </div>
 
 </div>
 
 <script>
 
-/* Navigation */
-function showSection(id) {
-  let sections = document.querySelectorAll('.section');
-  sections.forEach(sec => sec.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-/* Mobile Menu */
 function toggleMenu() {
-  let sidebar = document.getElementById('sidebar');
-  sidebar.style.display =
-    sidebar.style.display === 'block' ? 'none' : 'block';
+  let sidebar = document.getElementById("sidebar");
+  if (sidebar.style.left === "0px") {
+    sidebar.style.left = "-250px";
+  } else {
+    sidebar.style.left = "0px";
+  }
 }
 
-/* Tables → Modules */
-function calcModules() {
-  let tables = document.getElementById('tablesInput').value;
-  let modules = tables * 58;
-  document.getElementById('modulesResult').innerText =
-    "Modules: " + modules;
+function showSection(id) {
+  let sections = document.querySelectorAll(".section");
+  sections.forEach(sec => sec.classList.remove("active"));
+
+  document.getElementById(id).classList.add("active");
+
+  // Auto close menu on mobile
+  document.getElementById("sidebar").style.left = "-250px";
 }
 
-/* Strings → Tables */
-function calcTables() {
-  let strings = document.getElementById('stringsInput').value;
-  let tables = strings / 2;
-  document.getElementById('tablesResult').innerText =
-    "Tables: " + tables;
-}
-
-/* Tables → MW */
 function calcMW() {
-  let tables = document.getElementById('mwTables').value;
-  let mw = tables * 0.041;
-  document.getElementById('mwResult').innerText =
-    "DC Capacity: " + mw.toFixed(2) + " MW";
-}
+  let modules = document.getElementById("modules").value;
+  let watt = document.getElementById("watt").value;
 
-/* Inverter → MW */
-function calcCapacity() {
-  let inv = document.getElementById('invCount').value;
-  let mw = inv * 0.39;
-  document.getElementById('invResult').innerText =
-    "Total DC Capacity: " + mw.toFixed(2) + " MW";
+  let dc = (modules * watt) / 1000000;
+  let ac = dc / 1.4;
+
+  document.getElementById("mwResult").innerHTML =
+    "DC: " + dc.toFixed(3) + " MW <br> AC: " + ac.toFixed(3) + " MW";
 }
 
 </script>
