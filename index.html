@@ -298,13 +298,32 @@ function showSection(id,btn){
 let mmsType="full";
 
 const material={
-  full:{Rafter:12,"Purlin":24,"Bracing":24},
-  half:{Rafter:7,"Purlin":12,"Bracing":14}
+  full:{
+    Rafter:12,
+    "Purlin 1":4,"Purlin 2":4,"Purlin 3":4,
+    "Purlin 4":4,"Purlin 5":4,"Purlin 6":4,
+    "Front Bracing":12,"Rear Bracing":12,
+    "Connecting Channel":12,"Cross Bracing":2
+  },
+  half:{
+    Rafter:7,
+    "Purlin 7":4,"Purlin 8":4,"Purlin 9":4,
+    "Front Bracing":7,"Rear Bracing":7,
+    "Connecting Channel":7,"Cross Bracing":2
+  }
 };
 
 const fastener={
-  full:{"Bolt":300,"Nut":300},
-  half:{"Bolt":150,"Nut":150}
+  full:{
+    "M12×30 Nut–Bolt":24,"M12×30 PW":48,"M12×30 SW":24,
+    "M10×30 Nut–Bolt":324,"M10×30 PW":472,"M10×30 SW":324,"M10×30 RW":176,
+    "M8×25 Nut-Bolt":232,"M8×25 RW":232
+  },
+  half:{
+    "M12×30 Nut–Bolt":14,"M12×30 PW":28,"M12×30 SW":14,
+    "M10×30 Nut–Bolt":176,"M10×30 PW":264,"M10×30 SW":176,"M10×30 RW":88,
+    "M8×25 Nut-Bolt":116,"M8×25 RW":116
+  }
 };
 
 function setMMSTable(t,btn){
