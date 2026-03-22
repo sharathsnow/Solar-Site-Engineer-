@@ -29,7 +29,7 @@ body{
   text-align:center;
 }
 
-.login-box input, .login-box button{
+.login-box input,.login-box button{
   width:100%;
   padding:12px;
   margin:10px 0;
@@ -54,7 +54,7 @@ body{
 }
 
 .header img{height:36px}
-.header h1{font-size:16px;margin:0;flex:1}
+.header h1{font-size:15px;margin:0;flex:1}
 
 /* INFO */
 .info-icon{
@@ -77,6 +77,7 @@ body{
   width:260px;
   border-radius:8px;
   display:none;
+  z-index:999;
 }
 
 /* LAYOUT */
@@ -99,11 +100,12 @@ body{
   background:#222;
   color:#fff;
   text-align:left;
+  cursor:pointer;
 }
 
 .sidebar button.active{background:#007bff}
 
-/* MOBILE SIDEBAR */
+/* MOBILE */
 @media(max-width:768px){
   .sidebar{
     position:fixed;
@@ -114,9 +116,7 @@ body{
     z-index:1000;
   }
 
-  .sidebar.show{
-    left:0;
-  }
+  .sidebar.show{left:0}
 
   .overlay{
     position:fixed;
@@ -129,22 +129,19 @@ body{
     z-index:999;
   }
 
-  .overlay.show{
-    display:block;
-  }
+  .overlay.show{display:block}
 }
 
 /* CONTENT */
 .content{flex:1;padding:15px}
 .box{background:#fff;padding:15px;border-radius:8px}
+.tabs,.subtabs{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
 
-button{padding:10px;margin-top:10px;width:100%}
+button{padding:10px;width:100%;margin-top:8px;cursor:pointer}
 input,select{width:100%;padding:10px;margin:8px 0}
 
 .hidden{display:none}
-.footer{text-align:center;padding:10px;font-size:12px}
 
-/* BUTTON TYPES */
 .table-btn{background:#e0e0e0}
 .table-btn.active{background:#1976d2;color:#fff}
 
@@ -154,7 +151,10 @@ input,select{width:100%;padding:10px;margin:8px 0}
 .calculate-btn{
   background:#007bff;
   color:#fff;
+  font-weight:bold;
 }
+
+.footer{text-align:center;padding:10px;font-size:12px}
 </style>
 </head>
 
@@ -176,11 +176,16 @@ input,select{width:100%;padding:10px;margin:8px 0}
 <div class="header">
   <div class="menu-btn" onclick="toggleMenu()">☰</div>
   <img src="IMG_4454.jpeg">
-  <h1>Solar Tool</h1>
+  <h1>Amararaja Solar Infra</h1>
   <div class="info-icon" onclick="toggleInfo()">i</div>
 </div>
 
 <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+<div class="info-popup" id="info">
+<b>Internal Utility Tool</b><br><br>
+Developed by <b>Sharath</b>
+</div>
 
 <div class="container">
 
@@ -194,14 +199,48 @@ input,select{width:100%;padding:10px;margin:8px 0}
 
 <!-- MMS -->
 <div id="mms" class="box">
-  <input id="mmsTables" type="number" placeholder="No. of Tables">
-  <button class="calculate-btn" onclick="calcMaterial()">Calculate</button>
-  <div id="mmsResult"></div>
+  <div class="tabs">
+    <button class="table-btn active" onclick="setMMSTable('full',this)">Full</button>
+    <button class="table-btn" onclick="setMMSTable('half',this)">Half</button>
+  </div>
+
+  <div class="subtabs">
+    <button class="mode-btn active" onclick="showMMS('t2m',this)">Table→Mat</button>
+    <button class="mode-btn" onclick="showMMS('m2t',this)">Mat→Table</button>
+    <button class="mode-btn" onclick="showMMS('t2f',this)">Table→Fast</button>
+    <button class="mode-btn" onclick="showMMS('f2t',this)">Fast→Table</button>
+  </div>
+
+  <div id="t2m">
+    <input id="mmsTables" type="number" placeholder="Tables">
+    <button class="calculate-btn" onclick="calcMaterial()">Calculate</button>
+    <div id="mmsResult"></div>
+  </div>
+
+  <div id="m2t" class="hidden">
+    <select id="matType"></select>
+    <input id="matQty" type="number">
+    <button class="calculate-btn" onclick="materialToTable()">Calculate</button>
+    <div id="mmsResult2"></div>
+  </div>
+
+  <div id="t2f" class="hidden">
+    <input id="fasTables" type="number">
+    <button class="calculate-btn" onclick="calcFasteners()">Calculate</button>
+    <div id="fasResult"></div>
+  </div>
+
+  <div id="f2t" class="hidden">
+    <select id="fasType"></select>
+    <input id="fasQty" type="number">
+    <button class="calculate-btn" onclick="fastenerToTable()">Calculate</button>
+    <div id="fasResult2"></div>
+  </div>
 </div>
 
 <!-- PILING -->
 <div id="piling" class="box hidden">
-  <input id="pileTables" type="number" placeholder="No. of Tables">
+  <input id="pileTables" type="number" placeholder="Tables">
   <button class="calculate-btn" onclick="calcPiling()">Calculate</button>
   <div id="pileResult"></div>
 </div>
@@ -223,6 +262,7 @@ input,select{width:100%;padding:10px;margin:8px 0}
 
 <script>
 
+/* LOGIN */
 function checkPassword(){
   if(passwordInput.value==="solar@123"){
     loginScreen.style.display="none";
@@ -232,15 +272,18 @@ function checkPassword(){
   }
 }
 
+/* MENU */
 function toggleMenu(){
   document.querySelector(".sidebar").classList.toggle("show");
-  document.getElementById("overlay").classList.toggle("show");
+  overlay.classList.toggle("show");
 }
 
+/* INFO */
 function toggleInfo(){
-  alert("Solar Site Tool");
+  info.style.display = info.style.display==="block"?"none":"block";
 }
 
+/* SECTION */
 function showSection(id,btn){
   document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
@@ -248,27 +291,84 @@ function showSection(id,btn){
   document.getElementById(id).classList.remove("hidden");
 
   document.querySelector(".sidebar").classList.remove("show");
-  document.getElementById("overlay").classList.remove("show");
+  overlay.classList.remove("show");
 }
+
+/* MMS LOGIC */
+let mmsType="full";
+
+const material={
+  full:{Rafter:12,"Purlin":24,"Bracing":24},
+  half:{Rafter:7,"Purlin":12,"Bracing":14}
+};
+
+const fastener={
+  full:{"Bolt":300,"Nut":300},
+  half:{"Bolt":150,"Nut":150}
+};
+
+function setMMSTable(t,btn){
+  mmsType=t;
+  btn.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  loadDropdowns();
+}
+
+function showMMS(id,btn){
+  btn.parentElement.querySelectorAll("button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  ["t2m","m2t","t2f","f2t"].forEach(x=>{
+    document.getElementById(x).classList.toggle("hidden",x!==id);
+  });
+}
+
+function loadDropdowns(){
+  matType.innerHTML="";
+  for(let k in material[mmsType]) matType.innerHTML+=`<option>${k}</option>`;
+  fasType.innerHTML="";
+  for(let k in fastener[mmsType]) fasType.innerHTML+=`<option>${k}</option>`;
+}
+loadDropdowns();
 
 function calcMaterial(){
-  let n = +mmsTables.value;
-  mmsResult.innerHTML = "Material for "+n+" tables calculated";
+  let n=+mmsTables.value;
+  let out="";
+  for(let k in material[mmsType]) out+=`${k}: ${material[mmsType][k]*n}<br>`;
+  mmsResult.innerHTML=out;
 }
 
+function materialToTable(){
+  let q=+matQty.value,t=matType.value;
+  mmsResult2.innerHTML="Tables: "+Math.floor(q/material[mmsType][t]);
+}
+
+function calcFasteners(){
+  let n=+fasTables.value;
+  let out="";
+  for(let k in fastener[mmsType]) out+=`${k}: ${fastener[mmsType][k]*n}<br>`;
+  fasResult.innerHTML=out;
+}
+
+function fastenerToTable(){
+  let q=+fasQty.value,t=fasType.value;
+  fasResult2.innerHTML="Tables: "+Math.floor(q/fastener[mmsType][t]);
+}
+
+/* PILING */
 function calcPiling(){
-  let n = +pileTables.value;
-  pileResult.innerHTML = "Posts: "+(n*12);
+  let n=+pileTables.value;
+  pileResult.innerHTML="Posts: "+(n*12);
 }
 
+/* MODULE */
 function calcPallets(){
-  let full = +fullTableCount.value;
-  let half = +halfTableCount.value;
+  let full=+fullTableCount.value||0;
+  let half=+halfTableCount.value||0;
 
-  let total = (full*58)+(half*29);
-  let pallets = Math.ceil(total/33);
+  let total=(full*58)+(half*29);
+  let pallets=Math.ceil(total/33);
 
-  moduleResult.innerHTML = "Pallets: "+pallets;
+  moduleResult.innerHTML=`Total Modules: ${total}<br>Pallets: ${pallets}`;
 }
 
 </script>
