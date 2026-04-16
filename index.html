@@ -3,236 +3,254 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Solar Material Calculator</title>
+<title>Solar Material Calculator & Gallery</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#f4f6f8}
+/* GENERAL STYLES */
+body{margin:0;font-family:Arial, sans-serif;background:#f4f6f8; color:#333;}
 
-/* LOGIN */
+/* LOGIN SCREEN */
 #loginScreen{height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#111,#333)}
-.login-box{background:#fff;padding:25px;width:300px;border-radius:10px;text-align:center}
-.login-box input,.login-box button{width:100%;padding:12px;margin:10px 0}
+.login-box{background:#fff;padding:25px;width:300px;border-radius:10px;text-align:center;box-shadow: 0 10px 25px rgba(0,0,0,0.5);}
+.login-box input,.login-box button{width:100%;padding:12px;margin:10px 0;border-radius:5px;border:1px solid #ccc;box-sizing: border-box;}
+.login-box button{background:#007bff; color:#fff; border:none; font-weight:bold; cursor:pointer;}
 
-/* APP */
+/* APP LAYOUT */
 #app{display:none}
-
-/* HEADER */
-.header{display:flex;align-items:center;gap:10px;background:#111;color:#fff;padding:12px}
+.header{display:flex;align-items:center;gap:10px;background:#111;color:#fff;padding:12px;position:sticky;top:0;z-index:100;}
 .menu-btn{font-size:22px;cursor:pointer}
-.header img{height:36px}
+.header img{height:36px; border-radius:4px;}
 .header h1{font-size:15px;margin:0;flex:1}
 
-/* INFO */
-.info-icon{width:26px;height:26px;border-radius:50%;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.info-popup{position:fixed;top:60px;right:12px;background:#fff;padding:14px;width:260px;border-radius:8px;display:none;z-index:999}
-
-/* LAYOUT */
-.container{display:flex}
+/* INFO POPUP */
+.info-icon{width:26px;height:26px;border-radius:50%;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:bold;}
+.info-popup{position:fixed;top:60px;right:12px;background:#fff;padding:14px;width:260px;border-radius:8px;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
 
 /* SIDEBAR */
-.sidebar{width:180px;background:#222;display:flex;flex-direction:column;transition:0.3s}
-.sidebar button{padding:14px;border:none;background:#222;color:#fff;text-align:left;cursor:pointer}
+.container{display:flex;}
+.sidebar{width:180px;background:#222;height:calc(100vh - 60px);display:flex;flex-direction:column;transition:0.3s;position:sticky;top:60px;}
+.sidebar button{padding:14px;border:none;background:#222;color:#fff;text-align:left;cursor:pointer;border-bottom:1px solid #333;}
 .sidebar button.active{background:#007bff}
 
-/* MOBILE */
-@media(max-width:768px){
-.sidebar{position:fixed;top:0;left:-220px;height:100%;width:200px;z-index:1000}
-.sidebar.show{left:0}
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999}
-.overlay.show{display:block}
-}
-
-/* CONTENT */
-.content{flex:1;padding:15px}
-.box{background:#fff;padding:15px;border-radius:8px}
-.tabs,.subtabs{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap}
-
-button{padding:10px;width:100%;margin-top:8px;cursor:pointer}
-input,select{width:100%;padding:10px;margin:8px 0}
+/* CONTENT AREA */
+.content{flex:1;padding:15px;max-width:100%;}
+.box{background:#fff;padding:15px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:20px;}
 .hidden{display:none}
+
+/* BUTTONS & INPUTS */
+.tabs, .subtabs{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
+button{padding:10px;width:100%;margin-top:8px;cursor:pointer;border-radius:4px;border:none;transition:0.2s;}
+button:active{transform:scale(0.98);}
+input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:4px;box-sizing:border-box;}
 
 .table-btn{background:#e0e0e0}
 .table-btn.active{background:#1976d2;color:#fff}
 .mode-btn{background:#c8e6c9}
 .mode-btn.active{background:#2e7d32;color:#fff}
+.calculate-btn{background:#007bff;color:#fff;font-weight:bold;font-size:16px;}
+.copy-btn{background:#6c757d; color:white; font-size:12px; margin-top:10px;}
 
-.calculate-btn{background:#007bff;color:#fff;font-weight:bold}
-.footer{text-align:center;padding:10px;font-size:12px}
+/* GALLERY GRID */
+.art-grid {display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:15px;}
+.art-card {background:#fff; border:1px solid #eee; border-radius:8px; overflow:hidden; text-align:center; padding:5px;}
+.art-card img {width:100%; height:120px; object-fit:cover; border-radius:4px;}
+
+/* MOBILE RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{position:fixed;top:60px;left:-220px;height:100%;width:200px;z-index:1000}
+  .sidebar.show{left:0}
+  .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999}
+  .overlay.show{display:block}
+}
+.footer{text-align:center;padding:20px;font-size:12px;color:#888;}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
-    <h2>Solar Material Calculator</h2>
+    <h2 style="margin-top:0;">Solar Infra Tool</h2>
+    <p style="font-size:13px; color:#666;">Site Material Reconciliation</p>
     <input type="password" id="passwordInput" placeholder="Enter Password">
-    <button onclick="checkPassword()">Enter</button>
-    <div id="loginError" style="color:red;display:none;">Incorrect password</div>
+    <button onclick="checkPassword()">Sign In</button>
+    <div id="loginError" style="color:red;display:none;font-size:12px;margin-top:5px;">Incorrect password</div>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
-
-<div class="header">
-  <div class="menu-btn" onclick="toggleMenu()">☰</div>
-  <img src="IMG_4454.jpeg">
-  <h1>Amararaja Solar Infra</h1>
-  <div class="info-icon" onclick="toggleInfo()">i</div>
-</div>
-
-<div id="overlay" class="overlay" onclick="toggleMenu()"></div>
-
-<div class="info-popup" id="info">
-<b>Internal Utility Tool</b><br><br>
-Developed by <b>Sharath</b>
-</div>
-
-<div class="container">
-
-<div class="sidebar">
-  <button class="active" onclick="showSection('mms',this)">MMS</button>
-  <button onclick="showSection('piling',this)">Piling</button>
-  <button onclick="showSection('module',this)">Module</button>
-  <button onclick="showSection('stringcalc',this)">String Calc</button>
-</div>
-
-<div class="content">
-
-<!-- MMS (unchanged) -->
-<div id="mms" class="box">
-  <div class="tabs">
-    <button class="table-btn active" onclick="setMMSTable('full',this)">Full</button>
-    <button class="table-btn" onclick="setMMSTable('half',this)">Half</button>
+  <div class="header">
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <img src="IMG_4454.jpeg" alt="Logo">
+    <h1>Amararaja Solar Infra</h1>
+    <div class="info-icon" onclick="toggleInfo()">i</div>
   </div>
 
-  <div class="subtabs">
-    <button class="mode-btn active" onclick="showMMS('t2m',this)">Table→Mat</button>
-    <button class="mode-btn" onclick="showMMS('m2t',this)">Mat→Table</button>
-    <button class="mode-btn" onclick="showMMS('t2f',this)">Table→Fast</button>
-    <button class="mode-btn" onclick="showMMS('f2t',this)">Fast→Table</button>
+  <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
+
+  <div class="info-popup" id="info">
+    <b>Internal Utility Tool</b><br>
+    Purpose: MMS Recon & Calculation<br><br>
+    Developed by <b>Sharath</b>
   </div>
 
-  <div id="t2m">
-    <input id="mmsTables" type="number" placeholder="Tables">
-    <button class="calculate-btn" onclick="calcMaterial()">Calculate</button>
-    <div id="mmsResult"></div>
+  <div class="container">
+    <div class="sidebar">
+      <button class="active" onclick="showSection('mms',this)">🏗️ MMS</button>
+      <button onclick="showSection('piling',this)">🚧 Piling</button>
+      <button onclick="showSection('module',this)">☀️ Module</button>
+      <button onclick="showSection('stringcalc',this)">🔌 String Calc</button>
+      <button onclick="showSection('gallery',this)">🎨 Drawings</button>
+    </div>
+
+    <div class="content">
+
+      <div id="mms" class="box">
+        <div class="tabs">
+          <button class="table-btn active" onclick="setMMSTable('full',this)">Full Table</button>
+          <button class="table-btn" onclick="setMMSTable('half',this)">Half Table</button>
+        </div>
+        <div class="subtabs">
+          <button class="mode-btn active" onclick="showMMS('t2m',this)">Table→Mat</button>
+          <button class="mode-btn" onclick="showMMS('m2t',this)">Mat→Table</button>
+        </div>
+        <div id="t2m">
+          <input id="mmsTables" type="number" placeholder="Enter Number of Tables">
+          <button class="calculate-btn" onclick="calcMaterial()">Calculate</button>
+          <div id="mmsResult" style="margin-top:15px; line-height:1.6;"></div>
+          <button class="copy-btn" onclick="copyResult('mmsResult')">📋 Copy Reconciliation Results</button>
+        </div>
+        </div>
+
+      <div id="piling" class="box hidden">
+        <h3>Piling Reconciliation</h3>
+        <input id="pileTables" type="number" placeholder="Total Tables">
+        <button class="calculate-btn" onclick="calcPiling()">Calculate</button>
+        <div id="pileResult"></div>
+      </div>
+
+      <div id="stringcalc" class="box hidden">
+        <h3>String & Inverter Calc</h3>
+        <input type="number" id="totalModules" placeholder="Total Modules">
+        <input type="number" id="modulesPerString" value="29" placeholder="Modules Per String">
+        <select id="stringMode">
+          <option value="18">18 Strings / Inverter</option>
+          <option value="19">19 Strings / Inverter</option>
+        </select>
+        <button class="calculate-btn" onclick="calcStringInv()">Calculate</button>
+        <div id="stringResult" style="margin-top:15px;"></div>
+        <button class="copy-btn" onclick="copyResult('stringResult')">📋 Copy Data</button>
+      </div>
+
+      <div id="gallery" class="box hidden">
+        <h3>Site Approved Drawings</h3>
+        <p style="font-size:12px; color:#666;">Click any image to view full size.</p>
+        <div id="artGrid" class="art-grid">
+          </div>
+        <hr style="margin-top:20px; opacity:0.2;">
+        <div style="text-align:center;">
+          <a href="https://github.com/sharathsnow" target="_blank" style="color:#007bff; text-decoration:none; font-weight:bold;">🔗 My GitHub Profile</a>
+        </div>
+      </div>
+
+    </div>
   </div>
-
-  <div id="m2t" class="hidden">
-    <select id="matType"></select>
-    <input id="matQty" type="number">
-    <button class="calculate-btn" onclick="materialToTable()">Calculate</button>
-    <div id="mmsResult2"></div>
-  </div>
-
-  <div id="t2f" class="hidden">
-    <input id="fasTables" type="number">
-    <button class="calculate-btn" onclick="calcFasteners()">Calculate</button>
-    <div id="fasResult"></div>
-  </div>
-
-  <div id="f2t" class="hidden">
-    <select id="fasType"></select>
-    <input id="fasQty" type="number">
-    <button class="calculate-btn" onclick="fastenerToTable()">Calculate</button>
-    <div id="fasResult2"></div>
-  </div>
-</div>
-
-<!-- PILING -->
-<div id="piling" class="box hidden">
-  <input id="pileTables" type="number" placeholder="Tables">
-  <button class="calculate-btn" onclick="calcPiling()">Calculate</button>
-  <div id="pileResult"></div>
-</div>
-
-<!-- MODULE -->
-<div id="module" class="box hidden">
-  <input id="fullTableCount" type="number" placeholder="Full Tables">
-  <input id="halfTableCount" type="number" placeholder="Half Tables">
-  <button class="calculate-btn" onclick="calcPallets()">Calculate</button>
-  <div id="moduleResult"></div>
-</div>
-
-<!-- STRING CALC -->
-<div id="stringcalc" class="box hidden">
-  <h3>String & Inverter Calculator</h3>
-
-  <input type="number" id="totalModules" placeholder="Total Modules">
-  <input type="number" id="modulesPerString" value="29">
-  
-  <select id="stringMode">
-    <option value="18">18 Strings / Inverter</option>
-    <option value="19">19 Strings / Inverter</option>
-  </select>
-
-  <button class="calculate-btn" onclick="calcStringInv()">Calculate</button>
-
-  <div id="stringResult"></div>
-</div>
-
-</div>
-</div>
-
-<div class="footer">Developed by Sharath</div>
-
+  <div class="footer">Developed by Sharath | Amararaja Solar Infra</div>
 </div>
 
 <script>
-
-/* LOGIN */
+/* LOGIN LOGIC */
 function checkPassword(){
-  if(passwordInput.value==="solar@123"){
-    loginScreen.style.display="none";
-    app.style.display="block";
-  }else{
-    loginError.style.display="block";
+  const pass = document.getElementById("passwordInput").value;
+  if(pass === "solar@123"){
+    document.getElementById("loginScreen").style.display="none";
+    document.getElementById("app").style.display="block";
+    loadGallery(); // Load images when entering
+  } else {
+    document.getElementById("loginError").style.display="block";
   }
 }
 
-/* MENU */
+// Allow "Enter" key to login
+document.getElementById("passwordInput").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") checkPassword();
+});
+
+/* NAVIGATION */
 function toggleMenu(){
   document.querySelector(".sidebar").classList.toggle("show");
-  overlay.classList.toggle("show");
+  document.getElementById("overlay").classList.toggle("show");
 }
 
-/* INFO */
 function toggleInfo(){
-  info.style.display = info.style.display==="block"?"none":"block";
+  const info = document.getElementById("info");
+  info.style.display = info.style.display === "block" ? "none" : "block";
 }
 
-/* SECTION */
-function showSection(id,btn){
-  document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("active"));
+function showSection(id, btn){
+  document.querySelectorAll(".sidebar button").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
-  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
+  document.querySelectorAll(".box").forEach(b => b.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
-
-  document.querySelector(".sidebar").classList.remove("show");
-  overlay.classList.remove("show");
+  if(window.innerWidth < 768) toggleMenu();
 }
 
-/* STRING CALC */
+/* CALCULATORS */
 function calcStringInv(){
   let modules = +totalModules.value;
   let perString = +modulesPerString.value;
   let stringsPerInv = +stringMode.value;
-
   let totalStrings = Math.floor(modules / perString);
   let inverters = Math.ceil(totalStrings / stringsPerInv);
   let lastInv = totalStrings % stringsPerInv || stringsPerInv;
 
-  stringResult.innerHTML = `
-  <b>Total Strings:</b> ${totalStrings}<br>
-  <b>Inverters Required:</b> ${inverters}<br>
-  <b>Strings/Inverter:</b> ${stringsPerInv}<br>
-  <b>Last Inverter:</b> ${lastInv}
+  document.getElementById("stringResult").innerHTML = `
+    <b>Total Strings:</b> ${totalStrings}<br>
+    <b>Inverters Required:</b> ${inverters}<br>
+    <b>Strings per Inv:</b> ${stringsPerInv}<br>
+    <b>Last Inverter:</b> ${lastInv} Strings
   `;
 }
 
+function calcMaterial() {
+  let tables = +document.getElementById("mmsTables").value;
+  // Add your specific MMS logic here, example:
+  let purlins = tables * 14; 
+  document.getElementById("mmsResult").innerHTML = `
+    <b>Reconciliation Summary:</b><br>
+    - Total Tables: ${tables}<br>
+    - Purlins Required: ${purlins}<br>
+    - Rafters Required: ${tables * 2}
+  `;
+}
+
+/* GALLERY DATA */
+// Add your 50 drawings here. Just add objects to the list!
+const drawings = [
+  { title: "MMS Structure", src: "drawing1.jpg" },
+  { title: "Piling Plan", src: "drawing2.jpg" },
+  { title: "Solar Park Layout", src: "drawing3.jpg" },
+  // Add more here...
+];
+
+function loadGallery() {
+  const grid = document.getElementById('artGrid');
+  grid.innerHTML = drawings.map(art => `
+    <div class="art-card">
+      <img src="${art.src}" alt="${art.title}" onclick="window.open(this.src)">
+      <p style="font-size:11px; margin:5px 0; font-weight:bold;">${art.title}</p>
+    </div>
+  `).join('');
+}
+
+/* UTILITY */
+function copyResult(id) {
+  const text = document.getElementById(id).innerText;
+  if(!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Reconciliation data copied to clipboard!");
+  });
+}
 </script>
 
 </body>
