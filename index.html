@@ -12,11 +12,8 @@ body{margin:0;font-family:Arial,sans-serif;background:#f4f6f8;color:#333}
 .login-box button{background:#007bff;color:#fff;border:none;font-weight:bold;cursor:pointer}
 #app{display:none}
 .header{display:flex;align-items:center;gap:10px;background:#111;color:#fff;padding:12px;position:sticky;top:0;z-index:100}
-.menu-btn{font-size:22px;cursor:pointer}
 .header img{height:36px;border-radius:4px}
 .header h1{font-size:15px;margin:0;flex:1}
-.info-icon{width:26px;height:26px;border-radius:50%;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:bold}
-.info-popup{position:fixed;top:60px;right:12px;background:#fff;padding:14px;width:260px;border-radius:8px;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
 .container{display:flex}
 .sidebar{width:180px;background:#222;height:calc(100vh - 60px);display:flex;flex-direction:column;transition:0.3s;position:sticky;top:60px}
 .sidebar button{padding:14px;border:none;background:#222;color:#fff;text-align:left;cursor:pointer;border-bottom:1px solid #333}
@@ -32,11 +29,10 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-r
 .mode-btn{background:#c8e6c9}
 .mode-btn.active{background:#2e7d32;color:#fff}
 .calculate-btn{background:#007bff;color:#fff;font-weight:bold;font-size:16px}
-.copy-btn{background:#6c757d;color:white;font-size:12px;margin-top:10px}
-.result-area{background:#f9f9f9;padding:10px;border-left:4px solid #007bff;margin-top:10px;font-size:14px;line-height:1.6}
+.result-area{background:#f0f7ff;padding:12px;border-left:4px solid #007bff;margin-top:10px;font-size:14px;line-height:1.6;color:#004085}
 .art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:15px}
 .art-card{background:#fff;border:1px solid #eee;border-radius:8px;overflow:hidden;text-align:center;padding:5px}
-.art-card img{width:100%;height:120px;object-fit:cover;border-radius:4px;cursor:pointer}
+.art-card img{width:100%;height:120px;object-fit:cover;border-radius:4px}
 @media(max-width:768px){.sidebar{position:fixed;top:60px;left:-220px;height:100%;width:200px;z-index:1000}.sidebar.show{left:0}.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999}.overlay.show{display:block}}
 </style>
 </head>
@@ -44,10 +40,9 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-r
 
 <div id="loginScreen">
   <div class="login-box">
-    <h2>Solar Infra Tool</h2>
+    <h2>Amararaja Solar Infra</h2>
     <input type="password" id="passwordInput" placeholder="Enter Password">
-    <button onclick="checkPassword()">Sign In</button>
-    <div id="loginError" style="color:red;display:none;font-size:12px;margin-top:5px;">Incorrect password</div>
+    <button onclick="checkPassword()">Log In</button>
   </div>
 </div>
 
@@ -55,23 +50,18 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-r
   <div class="header">
     <div class="menu-btn" onclick="toggleMenu()">☰</div>
     <img src="IMG_4454.jpeg" alt="Logo">
-    <h1>Amararaja Solar Infra</h1>
-    <div class="info-icon" onclick="toggleInfo()">i</div>
+    <h1>Site Utility Tool</h1>
   </div>
 
   <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
-  <div class="info-popup" id="info">
-    <b>Site Utility Tool</b><br>MMS & Recon Logic<br>Developed by <b>Sharath</b>
-  </div>
-
   <div class="container">
     <div class="sidebar">
-      <button class="active" onclick="showSection('mms',this)">🏗️ MMS</button>
+      <button class="active" onclick="showSection('mms',this)">🏗️ MMS Recon</button>
       <button onclick="showSection('piling',this)">🚧 Piling</button>
-      <button onclick="showSection('module',this)">☀️ Module</button>
+      <button onclick="showSection('module',this)">☀️ Module/Pallet</button>
       <button onclick="showSection('stringcalc',this)">🔌 String Calc</button>
-      <button onclick="showSection('gallery',this)">🎨 Drawings</button>
+      <button onclick="showSection('gallery',this)">🎨 My Drawings</button>
     </div>
 
     <div class="content">
@@ -84,13 +74,13 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-r
           <button class="mode-btn active" onclick="showMMS('t2m',this)">Table→Mat</button>
           <button class="mode-btn" onclick="showMMS('m2t',this)">Mat→Table</button>
           <button class="mode-btn" onclick="showMMS('t2f',this)">Table→Fast</button>
+          <button class="mode-btn" onclick="showMMS('f2t',this)">Fast→Table</button>
         </div>
 
         <div id="t2m">
-          <input id="mmsTables" type="number" placeholder="Number of Tables">
-          <button class="calculate-btn" onclick="calcMaterial()">Calculate</button>
+          <input id="mmsTables" type="number" placeholder="Enter Number of Tables">
+          <button class="calculate-btn" onclick="calcMaterial()">Calculate Materials</button>
           <div id="mmsResult" class="result-area"></div>
-          <button class="copy-btn" onclick="copyResult('mmsResult')">📋 Copy Recon</button>
         </div>
 
         <div id="m2t" class="hidden">
@@ -99,38 +89,51 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-r
             <option value="rafter">Rafters</option>
             <option value="post">Posts</option>
           </select>
-          <input id="matQty" type="number" placeholder="Enter Quantity">
-          <button class="calculate-btn" onclick="materialToTable()">Calculate</button>
+          <input id="matQty" type="number" placeholder="Material Quantity Found">
+          <button class="calculate-btn" onclick="materialToTable()">Calculate Tables</button>
           <div id="mmsResult2" class="result-area"></div>
         </div>
 
         <div id="t2f" class="hidden">
-          <input id="fasTables" type="number" placeholder="Tables">
+          <input id="fasTables" type="number" placeholder="Enter Tables">
           <button class="calculate-btn" onclick="calcFasteners()">Calculate Fasteners</button>
           <div id="fasResult" class="result-area"></div>
+        </div>
+
+        <div id="f2t" class="hidden">
+          <select id="fasType">
+            <option value="28">M12x35 (28/Table)</option>
+            <option value="56">M10x30 (56/Table)</option>
+            <option value="84">Washers (84/Table)</option>
+          </select>
+          <input id="fasQty" type="number" placeholder="Fastener Count Found">
+          <button class="calculate-btn" onclick="fastenerToTable()">Calculate Coverage</button>
+          <div id="fasResult2" class="result-area"></div>
         </div>
       </div>
 
       <div id="piling" class="box hidden">
-        <input id="pileTables" type="number" placeholder="Number of Tables">
+        <div class="tabs">
+          <button class="table-btn active" onclick="setPileTable('full',this)">Full Table (2 Piles)</button>
+          <button class="table-btn" onclick="setPileTable('half',this)">Half Table (2 Piles)</button>
+        </div>
+        <input id="pileTables" type="number" placeholder="Enter Number of Tables">
         <button class="calculate-btn" onclick="calcPiling()">Calculate Piling</button>
         <div id="pileResult" class="result-area"></div>
       </div>
 
       <div id="module" class="box hidden">
-        <input id="fullTableCount" type="number" placeholder="Full Tables">
-        <input id="halfTableCount" type="number" placeholder="Half Tables">
-        <button class="calculate-btn" onclick="calcPallets()">Calculate Pallets</button>
+        <h3>Pallet Reconciliation (33 Mods/Pallet)</h3>
+        <input id="fullTableCount" type="number" placeholder="Full Tables (58 modules)">
+        <input id="halfTableCount" type="number" placeholder="Half Tables (30 modules)">
+        <button class="calculate-btn" onclick="calcPallets()">Calculate Modules/Pallets</button>
         <div id="moduleResult" class="result-area"></div>
       </div>
 
       <div id="stringcalc" class="box hidden">
         <input type="number" id="totalModules" placeholder="Total Modules">
         <input type="number" id="modulesPerString" value="29">
-        <select id="stringMode">
-          <option value="18">18 Strings/Inv</option>
-          <option value="19">19 Strings/Inv</option>
-        </select>
+        <select id="stringMode"><option value="18">18 Str/Inv</option><option value="19">19 Str/Inv</option></select>
         <button class="calculate-btn" onclick="calcStringInv()">Calculate Strings</button>
         <div id="stringResult" class="result-area"></div>
       </div>
@@ -138,109 +141,125 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-r
       <div id="gallery" class="box hidden">
         <h3>Site Approved Drawings</h3>
         <div id="artGrid" class="art-grid"></div>
-        <hr><div style="text-align:center;"><a href="https://github.com/sharathsnow" target="_blank" style="text-decoration:none;font-weight:bold;color:#007bff">🔗 View My GitHub Account</a></div>
+        <hr><div style="text-align:center;"><a href="https://github.com/sharathsnow" target="_blank" style="color:#007bff;text-decoration:none;font-weight:bold">🔗 Visit My GitHub Profile</a></div>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-let currentTableType = 'full';
+let mmsTableType = 'full';
+let pileTableType = 'full';
 
 function checkPassword(){
   if(document.getElementById("passwordInput").value === "solar@123"){
     document.getElementById("loginScreen").style.display="none";
     document.getElementById("app").style.display="block";
     loadGallery();
-  } else { document.getElementById("loginError").style.display="block"; }
+  } else { alert("Incorrect Password"); }
 }
-
-document.getElementById("passwordInput").addEventListener("keypress", (e) => { if(e.key==="Enter") checkPassword(); });
-
-function toggleMenu(){ document.querySelector(".sidebar").classList.toggle("show"); document.getElementById("overlay").classList.toggle("show"); }
-function toggleInfo(){ const info = document.getElementById("info"); info.style.display = info.style.display==="block"?"none":"block"; }
 
 function showSection(id,btn){
   document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
   document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
-  if(window.innerWidth < 768 && id !== 'mms') toggleMenu();
 }
 
+function toggleMenu(){ document.querySelector(".sidebar").classList.toggle("show"); document.getElementById("overlay").classList.toggle("show"); }
+
+/* MMS LOGIC */
 function setMMSTable(type,btn){
-  currentTableType = type;
-  document.querySelectorAll(".table-btn").forEach(b=>b.classList.remove("active"));
+  mmsTableType = type;
+  document.querySelectorAll("#mms .table-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
 }
 
 function showMMS(id,btn){
   document.querySelectorAll(".mode-btn").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-  document.getElementById("t2m").classList.add("hidden");
-  document.getElementById("m2t").classList.add("hidden");
-  document.getElementById("t2f").classList.add("hidden");
+  ["t2m","m2t","t2f","f2t"].forEach(div => document.getElementById(div).classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
 }
 
-/* --- MATH LOGICS --- */
 function calcMaterial(){
-  let t = +mmsTables.value;
-  let p = currentTableType==='full'?14:7;
-  mmsResult.innerHTML = `<b>For ${t} ${currentTableType} Tables:</b><br>Purlins: ${t*p}<br>Rafters: ${t*2}<br>Posts: ${t*2}<br>Bracing: ${t*4}`;
+  let t = +mmsTables.value, p = mmsTableType==='full'?14:7;
+  mmsResult.innerHTML = `<b>Recon for ${t} ${mmsTableType} tables:</b><br>
+  - Purlins: ${t*p}<br>
+  - Rafters: ${t*2}<br>
+  - Posts: ${t*2}<br>
+  - Bracings: ${t*4} (2 Front, 2 Rear)`;
 }
 
 function materialToTable(){
-  let qty = +matQty.value;
-  let type = matType.value;
-  let ratio = 1;
-  if(type === 'purlin') ratio = currentTableType==='full'?14:7;
-  else if(type === 'rafter' || type === 'post') ratio = 2;
-  mmsResult2.innerHTML = `<b>Possible Tables:</b> ${Math.floor(qty/ratio)} ${currentTableType} tables`;
+  let q = +matQty.value, type = matType.value;
+  let r = (type==='purlin') ? (mmsTableType==='full'?14:7) : 2;
+  mmsResult2.innerHTML = `<b>Completed ${mmsTableType} Tables:</b> ${Math.floor(q/r)}<br>Loose Components: ${q%r}`;
 }
 
 function calcFasteners(){
   let t = +fasTables.value;
-  fasResult.innerHTML = `<b>Fastener Recon:</b><br>M12x35: ${t*28}<br>M10x30: ${t*56}<br>Spring Washers: ${t*84}`;
+  fasResult.innerHTML = `<b>Fasteners Needed:</b><br>
+  - M12x35: ${t*28}<br>
+  - M10x30: ${t*56}<br>
+  - Plain Washers: ${t*168}<br>
+  - Spring Washers: ${t*84}`;
+}
+
+function fastenerToTable(){
+  let q = +fasQty.value, r = +fasType.value;
+  fasResult2.innerHTML = `<b>Coverage:</b> ${Math.floor(q/r)} Tables<br>Spare Bolts: ${q%r}`;
+}
+
+/* PILING LOGIC */
+function setPileTable(type,btn){
+  pileTableType = type;
+  document.querySelectorAll("#piling .table-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
 }
 
 function calcPiling(){
   let t = +pileTables.value;
-  pileResult.innerHTML = `<b>Piling Requirement:</b><br>Pre-drilling: ${t*2}<br>Concrete: ${(t*0.15).toFixed(2)} m³<br>Posts: ${t*2}`;
+  let piles = t * 2; 
+  pileResult.innerHTML = `<b>Data for ${t} Tables:</b><br>
+  - Total Piles: ${piles}<br>
+  - Concrete Volume (0.08m³ avg): ${(piles*0.08).toFixed(2)} m³<br>
+  - Post Erection: ${piles} Posts`;
 }
 
+/* MODULE LOGIC */
 function calcPallets(){
   let f = +fullTableCount.value, h = +halfTableCount.value;
-  let totalMods = (f*58) + (h*30);
-  let pallets = Math.ceil(totalMods/31);
-  moduleResult.innerHTML = `<b>Module Summary:</b><br>Total Modules: ${totalMods}<br>Pallets (approx): ${pallets}`;
+  let total = (f*58) + (h*30);
+  moduleResult.innerHTML = `<b>Site Summary:</b><br>
+  - Total Modules: ${total}<br>
+  - Pallets (33/pallet): ${Math.ceil(total/33)}<br>
+  - Remainder: ${total%33} modules`;
 }
 
+/* STRING CALC */
 function calcStringInv(){
   let m = +totalModules.value, s = +modulesPerString.value, i = +stringMode.value;
-  let ts = Math.floor(m/s), inv = Math.ceil(ts/i);
-  stringResult.innerHTML = `<b>System Data:</b><br>Total Strings: ${ts}<br>Inverters: ${inv}<br>Last Inv Strings: ${ts%i || i}`;
+  let ts = Math.floor(m/s);
+  stringResult.innerHTML = `<b>DC Electrical:</b><br>
+  - Total Strings: ${ts}<br>
+  - Total Inverters: ${Math.ceil(ts/i)}<br>
+  - String Balance: ${ts%i || i} on last Inverter`;
 }
 
-/* --- GALLERY --- */
+/* GALLERY - Add your 50 drawings here */
 const drawings = [
-  {title:"Structure-01", src:"drawing1.jpg"},
-  {title:"Foundation-01", src:"drawing2.jpg"},
-  {title:"General Arrangement", src:"drawing3.jpg"}
+  {title:"MMS Structure", src:"drawing1.jpg"},
+  {title:"Foundation Detail", src:"drawing2.jpg"},
+  {title:"Module Layout", src:"drawing3.jpg"}
 ];
 
 function loadGallery(){
   const grid = document.getElementById('artGrid');
-  grid.innerHTML = drawings.length > 0 ? drawings.map(art => `
-    <div class="art-card">
-      <img src="${art.src}" alt="${art.title}" onclick="window.open(this.src)">
-      <p style="font-size:11px;padding:5px">${art.title}</p>
-    </div>`).join('') : '<p>No drawings uploaded yet.</p>';
-}
-
-function copyResult(id){
-  navigator.clipboard.writeText(document.getElementById(id).innerText);
-  alert("Recon data copied to clipboard!");
+  grid.innerHTML = drawings.map(art => `<div class="art-card">
+    <img src="${art.src}" onerror="this.src='https://via.placeholder.com/150?text=Drawing'" onclick="window.open(this.src)">
+    <p style="font-size:11px">${art.title}</p>
+  </div>`).join('');
 }
 </script>
 </body>
