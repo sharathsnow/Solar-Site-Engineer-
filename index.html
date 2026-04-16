@@ -6,72 +6,47 @@
 <title>Solar Material Calculator & Gallery</title>
 
 <style>
-/* GENERAL STYLES */
-body{margin:0;font-family:Arial, sans-serif;background:#f4f6f8; color:#333;}
-
-/* LOGIN SCREEN */
+body{margin:0;font-family:Arial, sans-serif;background:#f4f6f8;color:#333}
 #loginScreen{height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#111,#333)}
-.login-box{background:#fff;padding:25px;width:300px;border-radius:10px;text-align:center;box-shadow: 0 10px 25px rgba(0,0,0,0.5);}
-.login-box input,.login-box button{width:100%;padding:12px;margin:10px 0;border-radius:5px;border:1px solid #ccc;box-sizing: border-box;}
-.login-box button{background:#007bff; color:#fff; border:none; font-weight:bold; cursor:pointer;}
-
-/* APP LAYOUT */
+.login-box{background:#fff;padding:25px;width:300px;border-radius:10px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.5)}
+.login-box input,.login-box button{width:100%;padding:12px;margin:10px 0;border-radius:5px;border:1px solid #ccc;box-sizing:border-box}
+.login-box button{background:#007bff;color:#fff;border:none;font-weight:bold;cursor:pointer}
 #app{display:none}
-.header{display:flex;align-items:center;gap:10px;background:#111;color:#fff;padding:12px;position:sticky;top:0;z-index:100;}
+.header{display:flex;align-items:center;gap:10px;background:#111;color:#fff;padding:12px;position:sticky;top:0;z-index:100}
 .menu-btn{font-size:22px;cursor:pointer}
-.header img{height:36px; border-radius:4px;}
+.header img{height:36px;border-radius:4px}
 .header h1{font-size:15px;margin:0;flex:1}
-
-/* INFO POPUP */
-.info-icon{width:26px;height:26px;border-radius:50%;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:bold;}
-.info-popup{position:fixed;top:60px;right:12px;background:#fff;padding:14px;width:260px;border-radius:8px;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
-
-/* SIDEBAR */
-.container{display:flex;}
-.sidebar{width:180px;background:#222;height:calc(100vh - 60px);display:flex;flex-direction:column;transition:0.3s;position:sticky;top:60px;}
-.sidebar button{padding:14px;border:none;background:#222;color:#fff;text-align:left;cursor:pointer;border-bottom:1px solid #333;}
+.info-icon{width:26px;height:26px;border-radius:50%;background:#fff;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:bold}
+.info-popup{position:fixed;top:60px;right:12px;background:#fff;padding:14px;width:260px;border-radius:8px;display:none;z-index:999;box-shadow:0 4px 12px rgba(0,0,0,0.2)}
+.container{display:flex}
+.sidebar{width:180px;background:#222;height:calc(100vh - 60px);display:flex;flex-direction:column;transition:0.3s;position:sticky;top:60px}
+.sidebar button{padding:14px;border:none;background:#222;color:#fff;text-align:left;cursor:pointer;border-bottom:1px solid #333}
 .sidebar button.active{background:#007bff}
-
-/* CONTENT AREA */
-.content{flex:1;padding:15px;max-width:100%;}
-.box{background:#fff;padding:15px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:20px;}
+.content{flex:1;padding:15px;max-width:100%}
+.box{background:#fff;padding:15px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:20px}
 .hidden{display:none}
-
-/* BUTTONS & INPUTS */
-.tabs, .subtabs{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
-button{padding:10px;width:100%;margin-top:8px;cursor:pointer;border-radius:4px;border:none;transition:0.2s;}
-button:active{transform:scale(0.98);}
-input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:4px;box-sizing:border-box;}
-
+.tabs,.subtabs{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
+button{padding:10px;width:100%;margin-top:8px;cursor:pointer;border-radius:4px;border:none;transition:0.2s}
+button:active{transform:scale(0.98)}
+input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-radius:4px;box-sizing:border-box}
 .table-btn{background:#e0e0e0}
 .table-btn.active{background:#1976d2;color:#fff}
 .mode-btn{background:#c8e6c9}
 .mode-btn.active{background:#2e7d32;color:#fff}
-.calculate-btn{background:#007bff;color:#fff;font-weight:bold;font-size:16px;}
-.copy-btn{background:#6c757d; color:white; font-size:12px; margin-top:10px;}
-
-/* GALLERY GRID */
-.art-grid {display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:15px;}
-.art-card {background:#fff; border:1px solid #eee; border-radius:8px; overflow:hidden; text-align:center; padding:5px;}
-.art-card img {width:100%; height:120px; object-fit:cover; border-radius:4px;}
-
-/* MOBILE RESPONSIVE */
-@media(max-width:768px){
-  .sidebar{position:fixed;top:60px;left:-220px;height:100%;width:200px;z-index:1000}
-  .sidebar.show{left:0}
-  .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999}
-  .overlay.show{display:block}
-}
-.footer{text-align:center;padding:20px;font-size:12px;color:#888;}
+.calculate-btn{background:#007bff;color:#fff;font-weight:bold;font-size:16px}
+.copy-btn{background:#6c757d;color:white;font-size:12px;margin-top:10px}
+.art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:15px}
+.art-card{background:#fff;border:1px solid #eee;border-radius:8px;overflow:hidden;text-align:center;padding:5px}
+.art-card img{width:100%;height:120px;object-fit:cover;border-radius:4px}
+@media(max-width:768px){.sidebar{position:fixed;top:60px;left:-220px;height:100%;width:200px;z-index:1000}.sidebar.show{left:0}.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:999}.overlay.show{display:block}}
+.footer{text-align:center;padding:20px;font-size:12px;color:#888}
 </style>
 </head>
-
 <body>
 
 <div id="loginScreen">
   <div class="login-box">
-    <h2 style="margin-top:0;">Solar Infra Tool</h2>
-    <p style="font-size:13px; color:#666;">Site Material Reconciliation</p>
+    <h2>Solar Infra Tool</h2>
     <input type="password" id="passwordInput" placeholder="Enter Password">
     <button onclick="checkPassword()">Sign In</button>
     <div id="loginError" style="color:red;display:none;font-size:12px;margin-top:5px;">Incorrect password</div>
@@ -89,9 +64,7 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-r
   <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
   <div class="info-popup" id="info">
-    <b>Internal Utility Tool</b><br>
-    Purpose: MMS Recon & Calculation<br><br>
-    Developed by <b>Sharath</b>
+    <b>MMS Recon Tool</b><br>Developed by <b>Sharath</b>
   </div>
 
   <div class="container">
@@ -104,154 +77,145 @@ input,select{width:100%;padding:12px;margin:8px 0;border:1px solid #ddd;border-r
     </div>
 
     <div class="content">
-
       <div id="mms" class="box">
         <div class="tabs">
-          <button class="table-btn active" onclick="setMMSTable('full',this)">Full Table</button>
-          <button class="table-btn" onclick="setMMSTable('half',this)">Half Table</button>
+          <button class="table-btn active" onclick="setMMSTable('full',this)">Full</button>
+          <button class="table-btn" onclick="setMMSTable('half',this)">Half</button>
         </div>
         <div class="subtabs">
           <button class="mode-btn active" onclick="showMMS('t2m',this)">Table→Mat</button>
           <button class="mode-btn" onclick="showMMS('m2t',this)">Mat→Table</button>
-        </div>
-        <div id="t2m">
-          <input id="mmsTables" type="number" placeholder="Enter Number of Tables">
-          <button class="calculate-btn" onclick="calcMaterial()">Calculate</button>
-          <div id="mmsResult" style="margin-top:15px; line-height:1.6;"></div>
-          <button class="copy-btn" onclick="copyResult('mmsResult')">📋 Copy Reconciliation Results</button>
-        </div>
+          <button class="mode-btn" onclick="showMMS('t2f',this)">Table→Fast</button>
         </div>
 
+        <div id="t2m">
+          <input id="mmsTables" type="number" placeholder="Enter Tables">
+          <button class="calculate-btn" onclick="calcMaterial()">Calculate</button>
+          <div id="mmsResult"></div>
+          <button class="copy-btn" onclick="copyResult('mmsResult')">📋 Copy Results</button>
+        </div>
+
+        <div id="m2t" class="hidden">
+          <select id="matType">
+            <option value="14">Purlins (14/Table)</option>
+            <option value="2">Rafters (2/Table)</option>
+          </select>
+          <input id="matQty" type="number" placeholder="Material Quantity">
+          <button class="calculate-btn" onclick="materialToTable()">Calculate</button>
+          <div id="mmsResult2"></div>
+        </div>
+
+        <div id="t2f" class="hidden">
+          <input id="fasTables" type="number" placeholder="Tables for Fasteners">
+          <button class="calculate-btn" onclick="calcFasteners()">Calculate</button>
+          <div id="fasResult"></div>
+        </div>
+      </div>
+
       <div id="piling" class="box hidden">
-        <h3>Piling Reconciliation</h3>
         <input id="pileTables" type="number" placeholder="Total Tables">
         <button class="calculate-btn" onclick="calcPiling()">Calculate</button>
         <div id="pileResult"></div>
       </div>
 
       <div id="stringcalc" class="box hidden">
-        <h3>String & Inverter Calc</h3>
         <input type="number" id="totalModules" placeholder="Total Modules">
-        <input type="number" id="modulesPerString" value="29" placeholder="Modules Per String">
-        <select id="stringMode">
-          <option value="18">18 Strings / Inverter</option>
-          <option value="19">19 Strings / Inverter</option>
-        </select>
+        <input type="number" id="modulesPerString" value="29">
+        <select id="stringMode"><option value="18">18 Str/Inv</option><option value="19">19 Str/Inv</option></select>
         <button class="calculate-btn" onclick="calcStringInv()">Calculate</button>
-        <div id="stringResult" style="margin-top:15px;"></div>
-        <button class="copy-btn" onclick="copyResult('stringResult')">📋 Copy Data</button>
+        <div id="stringResult"></div>
       </div>
 
       <div id="gallery" class="box hidden">
         <h3>Site Approved Drawings</h3>
-        <p style="font-size:12px; color:#666;">Click any image to view full size.</p>
-        <div id="artGrid" class="art-grid">
-          </div>
-        <hr style="margin-top:20px; opacity:0.2;">
-        <div style="text-align:center;">
-          <a href="https://github.com/sharathsnow" target="_blank" style="color:#007bff; text-decoration:none; font-weight:bold;">🔗 My GitHub Profile</a>
-        </div>
+        <div id="artGrid" class="art-grid"></div>
+        <hr><div style="text-align:center;"><a href="https://github.com/sharathsnow" target="_blank">🔗 My GitHub</a></div>
       </div>
-
     </div>
   </div>
-  <div class="footer">Developed by Sharath | Amararaja Solar Infra</div>
+  <div class="footer">Developed by Sharath</div>
 </div>
 
 <script>
-/* LOGIN LOGIC */
+let currentTableType = 'full';
+
 function checkPassword(){
-  const pass = document.getElementById("passwordInput").value;
-  if(pass === "solar@123"){
+  if(document.getElementById("passwordInput").value === "solar@123"){
     document.getElementById("loginScreen").style.display="none";
     document.getElementById("app").style.display="block";
-    loadGallery(); // Load images when entering
-  } else {
-    document.getElementById("loginError").style.display="block";
-  }
+    loadGallery();
+  } else { document.getElementById("loginError").style.display="block"; }
 }
 
-// Allow "Enter" key to login
-document.getElementById("passwordInput").addEventListener("keypress", function(e) {
-  if (e.key === "Enter") checkPassword();
-});
+document.getElementById("passwordInput").addEventListener("keypress", (e) => { if(e.key==="Enter") checkPassword(); });
 
-/* NAVIGATION */
-function toggleMenu(){
-  document.querySelector(".sidebar").classList.toggle("show");
-  document.getElementById("overlay").classList.toggle("show");
-}
+function toggleMenu(){ document.querySelector(".sidebar").classList.toggle("show"); document.getElementById("overlay").classList.toggle("show"); }
+function toggleInfo(){ const info = document.getElementById("info"); info.style.display = info.style.display==="block"?"none":"block"; }
 
-function toggleInfo(){
-  const info = document.getElementById("info");
-  info.style.display = info.style.display === "block" ? "none" : "block";
-}
-
-function showSection(id, btn){
-  document.querySelectorAll(".sidebar button").forEach(b => b.classList.remove("active"));
+function showSection(id,btn){
+  document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("active"));
   btn.classList.add("active");
-  document.querySelectorAll(".box").forEach(b => b.classList.add("hidden"));
+  document.querySelectorAll(".box").forEach(b=>b.classList.add("hidden"));
   document.getElementById(id).classList.remove("hidden");
-  if(window.innerWidth < 768) toggleMenu();
 }
 
-/* CALCULATORS */
+function setMMSTable(type,btn){
+  currentTableType = type;
+  document.querySelectorAll(".table-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function showMMS(id,btn){
+  document.querySelectorAll(".mode-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("t2m").classList.add("hidden");
+  document.getElementById("m2t").classList.add("hidden");
+  document.getElementById("t2f").classList.add("hidden");
+  document.getElementById(id).classList.remove("hidden");
+}
+
+function calcMaterial(){
+  let t = +mmsTables.value;
+  let p = currentTableType==='full'?14:7;
+  mmsResult.innerHTML = `<b>Recon:</b><br>Purlins: ${t*p}<br>Rafters: ${t*2}<br>Posts: ${t*2}`;
+}
+
+function materialToTable(){
+  let qty = +matQty.value;
+  let ratio = +matType.value;
+  mmsResult2.innerHTML = `<b>Tables:</b> ${Math.floor(qty/ratio)}`;
+}
+
+function calcFasteners(){
+  let t = +fasTables.value;
+  fasResult.innerHTML = `<b>Fasteners:</b><br>M12x35: ${t*28}<br>M10x30: ${t*56}`;
+}
+
 function calcStringInv(){
-  let modules = +totalModules.value;
-  let perString = +modulesPerString.value;
-  let stringsPerInv = +stringMode.value;
-  let totalStrings = Math.floor(modules / perString);
-  let inverters = Math.ceil(totalStrings / stringsPerInv);
-  let lastInv = totalStrings % stringsPerInv || stringsPerInv;
-
-  document.getElementById("stringResult").innerHTML = `
-    <b>Total Strings:</b> ${totalStrings}<br>
-    <b>Inverters Required:</b> ${inverters}<br>
-    <b>Strings per Inv:</b> ${stringsPerInv}<br>
-    <b>Last Inverter:</b> ${lastInv} Strings
-  `;
+  let m = +totalModules.value, s = +modulesPerString.value, i = +stringMode.value;
+  let ts = Math.floor(m/s), inv = Math.ceil(ts/i);
+  stringResult.innerHTML = `Strings: ${ts}<br>Inverters: ${inv}`;
 }
 
-function calcMaterial() {
-  let tables = +document.getElementById("mmsTables").value;
-  // Add your specific MMS logic here, example:
-  let purlins = tables * 14; 
-  document.getElementById("mmsResult").innerHTML = `
-    <b>Reconciliation Summary:</b><br>
-    - Total Tables: ${tables}<br>
-    - Purlins Required: ${purlins}<br>
-    - Rafters Required: ${tables * 2}
-  `;
-}
-
-/* GALLERY DATA */
-// Add your 50 drawings here. Just add objects to the list!
 const drawings = [
-  { title: "MMS Structure", src: "drawing1.jpg" },
-  { title: "Piling Plan", src: "drawing2.jpg" },
-  { title: "Solar Park Layout", src: "drawing3.jpg" },
-  // Add more here...
+  {title:"MMS Layout", src:"drawing1.jpg"},
+  {title:"Foundation", src:"drawing2.jpg"}
 ];
 
-function loadGallery() {
+function loadGallery(){
   const grid = document.getElementById('artGrid');
   grid.innerHTML = drawings.map(art => `
     <div class="art-card">
-      <img src="${art.src}" alt="${art.title}" onclick="window.open(this.src)">
-      <p style="font-size:11px; margin:5px 0; font-weight:bold;">${art.title}</p>
-    </div>
-  `).join('');
+      <img src="${art.src}" onclick="window.open(this.src)">
+      <p>${art.title}</p>
+    </div>`).join('');
 }
 
-/* UTILITY */
-function copyResult(id) {
-  const text = document.getElementById(id).innerText;
-  if(!text) return;
-  navigator.clipboard.writeText(text).then(() => {
-    alert("Reconciliation data copied to clipboard!");
-  });
+function copyResult(id){
+  navigator.clipboard.writeText(document.getElementById(id).innerText);
+  alert("Copied!");
 }
 </script>
-
 </body>
 </html>
+
